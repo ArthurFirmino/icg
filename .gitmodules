@@ -1,0 +1,3 @@
+[submodule "external/OpenGP"]
+	path = external/OpenGP
+	url = https://github.com/arthurfirmino/OpenGP
