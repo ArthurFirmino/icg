@@ -6,10 +6,6 @@ include(common/config.cmake)
 include(common/Eigen.cmake)
 include(common/OpenGP.cmake)
 
-if(NOT WIN32)
-    include(common/PNG.cmake)
-endif()
-
 #--- OpenGL configuration
 include(common/OpenGL.cmake)
 include(common/GLEW.cmake)
