@@ -5,7 +5,10 @@ project(icg)
 include(common/config.cmake)
 include(common/Eigen.cmake)
 include(common/OpenGP.cmake)
-include(common/PNG.cmake)
+
+if(NOT WIN32)
+    include(common/PNG.cmake)
+endif()
 
 #--- OpenGL configuration
 include(common/OpenGL.cmake)

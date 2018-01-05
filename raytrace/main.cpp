@@ -1,4 +1,7 @@
 #include <OpenGP/Image/Image.h>
+#ifdef _WIN32
+    #include "bmpwrite.h"
+#endif
 
 using namespace OpenGP;
 
@@ -34,7 +37,11 @@ int main(int, char**){
        }
     }
 
+#ifdef _WIN32
+    bmpwrite("../../out.bmp", image);
+#else
     imwrite("../../out.png", image);
+#endif
     imshow(image);
 
     return EXIT_SUCCESS;
