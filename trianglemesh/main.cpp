@@ -27,16 +27,16 @@ void rasterize(Triangle t, Image<Colour> &image, Image<float> &depth) {
     Vec3 s2 = Vec3(t.v2(0), t.v2(1), 0);
     Vec3 s3 = Vec3(t.v3(0), t.v3(1), 0);
 
-    /// TODO: Restrict these bounds to only rasterize triangle bounding box
+    // Restrict these bounds to only rasterize triangle bounding box
     int maxCols = (int)image.cols();
     int maxRows = (int)image.rows();
-    int iMin = 0;                   ///
+    int iMin = 0.5f*(std::min(s1(0), std::min(s2(0), s3(0)))+1.0f)*maxCols;
     iMin = std::max(iMin, 0);
-    int iMax = maxCols;             ///
+    int iMax = 0.5f*(std::max(s1(0), std::max(s2(0), s3(0)))+1.0f)*maxCols;
     iMax = std::min(iMax+1, maxCols);
-    int jMin = 0;                   ///
+    int jMin = 0.5f*(std::min(s1(1), std::min(s2(1), s3(1)))+1.0f)*maxRows;
     jMin = std::max(jMin, 0);
-    int jMax = maxRows;             ///
+    int jMax = 0.5f*(std::max(s1(1), std::max(s2(1), s3(1)))+1.0f)*maxRows;
     jMax = std::min(jMax+1, maxRows);
 
     float totalArea = triangleArea(s1, s2, s3);
