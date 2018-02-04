@@ -15,3 +15,5 @@ include(common/GLFW.cmake)
 #add_subdirectory(raytrace)
 #add_subdirectory(rasterize)
 add_subdirectory(trianglemesh)
+
+add_subdirectory(assignment2)
