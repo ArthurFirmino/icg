@@ -83,10 +83,6 @@ int main() {
         Vec3 cam_up(0.0f, 1.0f, 0.0f);
         Mat4x4 view = OpenGP::lookAt(cam_pos, cam_look, cam_up);
 
-        glUseProgram(renderMesh.getProgramID());
-        glUniform3f(glGetUniformLocation(renderMesh.getProgramID(), "camera"), cam_pos.x(), cam_pos.y(), cam_pos.z());
-        glUseProgram(0);
-
         renderMesh.draw(model, view, projection);
     });
     window1.set_title("Assignment 2");
