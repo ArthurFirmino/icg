@@ -7,8 +7,8 @@ out vec4 FragColor;
 uniform int hasNormals;
 uniform int hasTextures;
 
-uniform sampler2D tex;
+uniform sampler2D texImage;
 
 void main() {
-    FragColor = texture(tex,uv).rgba;
+    FragColor = texture(texImage,uv).rgba;
 }
