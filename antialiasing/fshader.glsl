@@ -1,5 +1,9 @@
 R"(
 #version 330 core
+
+uniform float resolution_h;
+uniform float resolution_w;
+
 in vec2 uv;
 out vec3 color;
 
@@ -36,6 +40,6 @@ void main() {
     /// of points instead of one point per pixel. Average
     /// the sum of these samples to obtain an antialiased
     /// edge.
-    color = vec3(1) - sample_shape(uv)*vec3(0.7);
+    color = vec3(1,1,1) * sample_shape(uv);
 }
 )"

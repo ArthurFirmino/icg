@@ -28,6 +28,8 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT);
 
         shader->bind();
+        shader->set_uniform("resolution_w", float(width));
+        shader->set_uniform("resolution_h", float(height));
         fsquad->set_attributes(*shader);
         fsquad->draw();
         shader->unbind();
