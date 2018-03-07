@@ -50,7 +50,7 @@ int main(int, char**){
     /// TODO: attach color texture to framebuffer
 
 
-    Window& window = app.create_window([](Window&){
+    Window& window = app.create_window([&](Window&){
         glViewport(0,0,width,height);
 
         /// TODO: First draw the scene onto framebuffer
