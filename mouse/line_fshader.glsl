@@ -2,7 +2,6 @@ R"(
 #version 330 core
 uniform int selection;
 
-in int gl_PrimitiveID;
 out vec4 color;
 
 void main() {
