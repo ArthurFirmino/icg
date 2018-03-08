@@ -11,21 +11,49 @@ const char* line_vshader =
 const char* line_fshader =
 #include "line_fshader.glsl"
 ;
+const char* selection_vshader =
+#include "selection_vshader.glsl"
+;
+const char* selection_fshader =
+#include "selection_fshader.glsl"
+;
 
 void init();
 std::unique_ptr<Shader> lineShader;
 std::unique_ptr<GPUMesh> line;
 std::vector<Vec2> controlPoints;
 
+/// Selection with framebuffer pointers
+std::unique_ptr<Shader> selectionShader;
+std::unique_ptr<Framebuffer> selectionFB;
+std::unique_ptr<RGBA8Texture> selectionColor;
+std::unique_ptr<D16Texture> selectionDepth;
 
 int main(int, char**){
 
     Application app;
     init();
 
+    /// Selection shader
+    selectionShader = std::unique_ptr<Shader>(new Shader());
+    selectionShader->verbose = true;
+    selectionShader->add_vshader_from_source(selection_vshader);
+    selectionShader->add_fshader_from_source(selection_fshader);
+    selectionShader->link();
+    /// Framebuffer for selection shader
+    selectionFB = std::unique_ptr<Framebuffer>(new Framebuffer());
+    selectionColor = std::unique_ptr<RGBA8Texture>(new RGBA8Texture());
+    selectionColor->allocate(width,height);
+    selectionDepth = std::unique_ptr<D16Texture>(new D16Texture());
+    selectionDepth->allocate(width,height);
+    selectionFB->attach_color_texture(*selectionColor);
+    selectionFB->attach_depth_texture(*selectionDepth);
+
     // Mouse position and selected point
+    Vec2 pixelPosition = Vec2(0,0);
     Vec2 position = Vec2(0,0);
     Vec2 *selection = nullptr;
+    int offsetID = 0;
 
     // Display callback
     Window& window = app.create_window([&](Window&){
@@ -54,12 +82,12 @@ int main(int, char**){
     // Mouse movement callback
     window.add_listener<MouseMoveEvent>([&](const MouseMoveEvent &m){
         // Mouse position in clip coordinates
+        pixelPosition = m.position;
         Vec2 p = 2.0f*(Vec2(m.position.x()/width,-m.position.y()/height) - Vec2(0.5f,-0.5f));
         if( selection && (p-position).norm() > 0.0f) {
-            /// TODO: Make selected control points move with cursor
-
-
-
+            selection->x() = position.x();
+            selection->y() = position.y();
+            line->set_vbo<Vec2>("vposition", controlPoints);
         }
         position = p;
     });
@@ -68,13 +96,26 @@ int main(int, char**){
     window.add_listener<MouseButtonEvent>([&](const MouseButtonEvent &e){
         // Mouse selection case
         if( e.button == GLFW_MOUSE_BUTTON_LEFT && !e.released) {
+
+            /// Draw element id's to framebuffer
+            selectionFB->bind();
+            glViewport(0,0,width, height);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear color must be 1,1,1,1
+            glPointSize(POINTSIZE);
+            selectionShader->bind();
+            selectionShader->set_uniform("offsetID", offsetID);
+            line->set_attributes(*selectionShader);
+            line->set_mode(GL_POINTS);
+            line->draw();
+            selectionShader->unbind();
+            glFlush();
+            glFinish();
+
             selection = nullptr;
-            for(auto&& v : controlPoints) {
-                if ( (v-position).norm() < POINTSIZE/std::min(width,height) ) {
-                    selection = &v;
-                    break;
-                }
-            }
+            unsigned char a[4];
+            glReadPixels(int(pixelPosition[0]), height - int(pixelPosition[1]), 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &a);
+            selection = &controlPoints[0] + (int)a[0];
+            selectionFB->unbind();
         }
         // Mouse release case
         if( e.button == GLFW_MOUSE_BUTTON_LEFT && e.released) {
