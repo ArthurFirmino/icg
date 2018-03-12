@@ -22,3 +22,4 @@ add_subdirectory(mouse)
 add_subdirectory(mouse_framebuffer)
 
 #add_subdirectory(assignment2)
+add_subdirectory(assignment4)
