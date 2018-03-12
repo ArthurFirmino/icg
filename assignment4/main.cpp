@@ -254,7 +254,7 @@ void drawTerrain() {
         terrainShader->set_uniform(it->first.c_str(), 1+i);
         ++i;
     }
-    /// Bind height texture to GL_TEXTURE0 and set uniform noiseTex
+    /// TODO: Bind height texture to GL_TEXTURE0 and set uniform noiseTex
 
 
 
