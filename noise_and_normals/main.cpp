@@ -72,9 +72,9 @@ void init(){
     points.push_back(Vec2(-1,-1));
     points.push_back(Vec2(-1, 1));
     std::vector<Vec2> texCoords;
-    texCoords.push_back(Vec2(0,0));
     texCoords.push_back(Vec2(1,0));
     texCoords.push_back(Vec2(1,1));
+    texCoords.push_back(Vec2(0,0));
     texCoords.push_back(Vec2(0,1));
     std::vector<unsigned int> indices = { 0,1,2,3 }; // Using GL_TRIANGLE_STRIP
     quad->set_vbo<Vec2>("vposition", points);
